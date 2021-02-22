@@ -21,7 +21,7 @@ SCRIPT
 
 $heketi = <<SCRIPT
 sudo /bin/bash -c 'echo -e "HEKETI_CLI_USER=admin" >> /etc/environment'
-sudo /bin/bash -c 'echo -e "HEKETI_CLI_KEY=safebase01" >> /etc/environment'
+sudo /bin/bash -c 'echo -e "HEKETI_CLI_KEY=password" >> /etc/environment'
 SCRIPT
 
 $mount = <<SCRIPT
