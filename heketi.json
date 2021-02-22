@@ -20,12 +20,12 @@
       "_admin": "Admin has access to all APIs",
       "admin": {
         "_key_comment": "Set the admin key in the next line",
-        "key": "safebase01"
+        "key": "password"
       },
       "_user": "User only has access to /volumes endpoint",
       "user": {
         "_key_comment": "Set the user key in the next line",
-        "key": "safebase01"
+        "key": "password"
       }
     },
   
