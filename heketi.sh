@@ -39,7 +39,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now heketi
 
 systemctl status heketi
-
+sleep 3
 curl localhost:8080/hello; echo
 
 if [ $? -eq 1 ]; then 
@@ -47,20 +47,5 @@ if [ $? -eq 1 ]; then
     exit 1;
 fi
 
-echo "Create heketi cluster.."
-heketi-cli cluster create
-CLUSTER_ID=$(heketi-cli cluster list | awk -v FS=: 'NR==2{print $2}' | cut -d' ' -f1)
-
-echo "Adding nodes to cluster: $CLUSTER_ID"
-for i in gluster01 gluster02 gluster03; do
-  heketi-cli node add --zone 1 --cluster $CLUSTER_ID --management-host-name $i --storage-host-name $i
-done
-
-NODE_IDS=$(heketi-cli node list | awk -v FS=: '{print $2}' | cut -f1)
-
-echo "Adding devices to nodes"
-for i in $NODE_IDS; do
-  heketi-cli device add --name /dev/sdb --node $i
-  heketi-cli node info $i
-done
-
+echo "Load Heketi Topology file"
+heketi-cli topology load --json /vagrant/topology.json

@@ -24,12 +24,6 @@ sudo /bin/bash -c 'echo -e "HEKETI_CLI_USER=admin" >> /etc/environment'
 sudo /bin/bash -c 'echo -e "HEKETI_CLI_KEY=password" >> /etc/environment'
 SCRIPT
 
-$mount = <<SCRIPT
-sudo mkfs.xfs /dev/sdb 
-sudo mkdir /mnt/volume
-sudo mount /dev/sdb /mnt/volume
-SCRIPT
-
 BOX_NAME = "centos/7"
 MEMORY = "512"
 CPUS = 1
@@ -54,12 +48,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       gluster.vm.provision "shell",inline: $install_gluster_script, privileged: true
       gluster.vm.provision "shell",inline: $div_setup, privileged: true
       gluster.vm.provider "virtualbox" do |vb|
-        unless File.exist?("./disk#{i}.vdi")
-          vb.customize ['createhd', '--filename', "./disk#{i}.vdi", '--variant', 'Fixed', '--size', 2 * 1024]
+        unless File.exist?("./tmp/disk#{i}.vdi")
+          vb.customize ['createhd', '--filename', "./tmp/disk#{i}.vdi", '--variant', 'Fixed', '--size', 2 * 1024]
         end
-        vb.customize ['storageattach', :id,  '--storagectl', 'IDE', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', "./disk#{i}.vdi"]
+        vb.customize ['storageattach', :id,  '--storagectl', 'IDE', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', "./tmp/disk#{i}.vdi"]
       end
-      gluster.vm.provision "shell",inline: $mount, privileged: true
       if i == 1
         gluster.vm.provision "shell",inline: $heketi, privileged: true
       end  
